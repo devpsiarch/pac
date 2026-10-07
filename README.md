@@ -60,7 +60,6 @@ void main() {
 | `/` | Division | Pops `b`, pops `a`, pushes `a / b` |
 
 ## Current Limitations
-* **Integer Numerics Only**: Evaluator only supports integer literals. No String literals or complex datatypes yet.
-* **No Variable Storage**: Identifier binding to a symbol table is not yet implemented.
+* **Integer Numerics And Strings Only**: Evaluator only supports integer and string literals.
 * **No Control Flow**: Missing conditional branching (`IF` / `ELSE`) and iteration/jumps (`GOTO`, `WHILE`).
 * **No Custom Functions**: Execution is strictly linear across token streams.

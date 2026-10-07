@@ -2,7 +2,7 @@ import 'dart:io';
 
 
 enum TokenType {
-    plus,minus,mult,div,begin,end,identifer,eof
+    plus,minus,mult,div,begin,end,identifer,variable,eof
 }
 
 class Token {
@@ -65,7 +65,20 @@ class Lexer {
                 line++;
                 index++;
             default:
-                if(int.tryParse(content[index]) != null){
+                if(content[index] == "\""){
+                    String mark = "";
+                    index++;
+                    while(index < content.length && content[index] != "\""){
+                        mark += content[index];
+                        index++;
+                    }
+                    if(index >= content.length){
+                        print("String literal has no end.");
+                        return false;
+                    }
+                    index++;
+                    tokens.add(Token(TokenType.identifer,mark));
+                }else if(int.tryParse(content[index]) != null){
                     String mark = "";
                     while(index < content.length && int.tryParse(content[index]) != null){
                         mark += content[index];
@@ -85,7 +98,7 @@ class Lexer {
                         case "END":
                             tokens.add(Token(TokenType.end,null));
                         default:
-                            return false;
+                            tokens.add(Token(TokenType.variable,mark));
                     }
                     return true;
                 }

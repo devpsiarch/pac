@@ -55,6 +55,8 @@ void main() {
     test('does not mistake keywords embedded inside identifiers', () {
       lexer.lex('BEGINNER ENDING');
       expect(lexer.tokens, [
+        Token(TokenType.variable, "BEGINNER"),
+        Token(TokenType.variable, "ENDING"),
         Token(TokenType.eof, null),
       ]);
     });
@@ -144,5 +146,66 @@ group('Interpretation tests', () {
     expect(result, equals(20));
   });
 });
+
+group('Variable tests', () {
+  late Lexer l;
+  late Runtime vm;
+
+  setUp(() {
+    l = Lexer();
+    vm = Runtime();
+  });
+
+  test('Multiple variable assignments and evaluation (Provided Example)', () {
+    final content = '''
+    BEGIN
+        1 2 3 z y x
+        x y + z +
+    END
+    ''';
+    l.lex(content);
+    l.desc();
+    dynamic result = vm.execute(l.tokens);
+    expect(result, equals(6));
+  });
+
+  test('Single variable declaration and retrieval', () {
+    final content = '''
+    BEGIN
+        42 x
+        x
+    END
+    ''';
+    l.lex(content);
+    dynamic result = vm.execute(l.tokens);
+    expect(result, equals(42));
+  });
+
+  test('Reusing a variable in an expression', () {
+    final content = '''
+    BEGIN
+        5 x
+        x x *
+    END
+    ''';
+    l.lex(content);
+    dynamic result = vm.execute(l.tokens);
+    expect(result, equals(25));
+  });
+
+  test('Arithmetic combining variables and literals', () {
+    final content = '''
+    BEGIN
+        100 a
+        10 b
+        a b / 2 +
+    END
+    ''';
+    l.lex(content);
+    dynamic result = vm.execute(l.tokens);
+    expect(result, equals(12));
+  });
+});
+
 
 }
